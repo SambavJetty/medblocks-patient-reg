@@ -11,7 +11,6 @@ interface PatientRecord {
   registrationDate: string
 }
 
-// Create a simple IndexedDB database
 let db: IDBDatabase | null = null
 
 export const initializeDatabase = async () => {
@@ -33,7 +32,6 @@ export const initializeDatabase = async () => {
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result
 
-      // Create patients object store
       const store = db.createObjectStore("patients", { keyPath: "id", autoIncrement: true })
 
       // Create indexes for searching
@@ -118,7 +116,6 @@ export const addPatient = async (patient: PatientRecord) => {
   })
 }
 
-// Insert sample data
 export const insertSampleData = async () => {
   const samplePatients: PatientRecord[] = [
     {
