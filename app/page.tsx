@@ -16,7 +16,6 @@ export default function Home() {
       try {
         const db = await initializeDatabase()
 
-        // Check if we need to insert sample data
         const transaction = db.transaction(["patients"], "readonly")
         const store = transaction.objectStore("patients")
         const countRequest = store.count()
