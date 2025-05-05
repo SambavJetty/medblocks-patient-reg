@@ -1,7 +1,6 @@
 import initSqlJs from "sql.js"
 import { createDbWorker } from "@aphro/absurd-sql/dist/indexeddb-main-thread"
 
-// We'll use a singleton pattern to ensure the same database instance is used across the app
 let db: any = null
 let worker: any = null
 
@@ -9,12 +8,10 @@ export const initializeDatabase = async () => {
   if (db) return db
 
   try {
-    // Initialize SQL.js with absurd-sql for persistence
     const SQL = await initSqlJs({
       locateFile: (file: string) => `https://sql.js.org/dist/${file}`,
     })
 
-    // Create a database worker for persistence
     worker = createDbWorker(
       [
         {
@@ -25,10 +22,8 @@ export const initializeDatabase = async () => {
       () => new Worker(new URL("../workers/sql-worker.js", import.meta.url)),
     )
 
-    // Initialize the database
     db = await worker.db
 
-    // Create patients table if it doesn't exist
     await executeQuery(`
       CREATE TABLE IF NOT EXISTS patients (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,7 +39,6 @@ export const initializeDatabase = async () => {
       );
     `)
 
-    // Check if we have sample data, if not, insert some
     const result = await executeQuery("SELECT COUNT(*) as count FROM patients;")
     const count = result.rows[0].count
 
